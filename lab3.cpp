@@ -245,11 +245,12 @@ int check_keys(XEvent *e)
       x11.clear_screen();
       break;
     case XK_8:
+	//checkered board
       g.mode = 8;
-     // g.checkx = 100;
-     // g.checky = 100;    
-      g.checkx = rnd() * g.xres;
-      g.checky = rnd() * g.yres;
+      g.checkx = 100 * rnd();
+      g.checky = 100 * rnd();    
+     // g.checkx = rnd() * g.xres;
+     // g.checky = rnd() * g.yres;
 
 
       x11.clear_screen();
@@ -408,14 +409,21 @@ void render()
 	case 8: {
     //Fill whole screen with checkerboard pattern
 
-    Flt dx = x / (g.checkx*g.checky);
-    Flt dy = y / g.checky;
-        if(x % 2 == 0) {
-        x11.setColor3i(0,0,0);
-          if(y % 2 == 0) {
-          x11.setColor3i(255,255,255);
-          }
-        }
+    int dx = x / (g.checkx);
+	if ( dx % 2 == 0) {
+		int dy = y / (g.checky);
+		if ( dy % 2 == 0) {
+			x11.setColor3i(0,0,0);
+		}
+	} else {
+		x11.setColor3i(225,255,255);
+	}
+  //  Flt dy = y / g.checky;
+      //  if(x % 2 == 0) {
+      //  x11.setColor3i(0,0,0);
+        //  if(y % 2 == 0) {
+         // x11.setColor3i(255,255,255);
+          
       
    
     break;
