@@ -50,6 +50,10 @@ public:
   Flt radius2;
   Flt checkx;
   Flt checky;
+	Vec v0;
+	Vec v1;
+	Vec v2;
+
 	//triangle_vertices;
 	Vec tri[3];
 	Global() {
@@ -255,6 +259,16 @@ int check_keys(XEvent *e)
 
       x11.clear_screen();
       break;
+
+	case XK_5:
+	//triangle fill
+	g.mode = 5;
+	g.v0[0] = 100 * rnd();
+	g.v0[1] = 100 * rnd();
+	
+
+      	x11.clear_screen();
+	break;
     
 		case XK_c:
 			x11.clear_screen();
@@ -397,6 +411,7 @@ void render()
 		//Fill triangle using 3 half-spaces
 		//if (threeHalfSpaces(g.tri, x, y))
 		//	setColor3i(255,120,40);
+		
 		break;
 	case 6:
 		//Fill triangle using Odd-even rule
