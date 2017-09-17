@@ -53,6 +53,10 @@ public:
 	Vec v0;
 	Vec v1;
 	Vec v2;
+	Flt nPixelsInside;
+	Flt nPixelsOutside;
+	Flt pi;
+	int count;
 
 	//triangle_vertices;
 	Vec tri[3];
@@ -61,6 +65,10 @@ public:
 		xres = 800; yres = 800;
 		mode = 0;
 		nPixels = 1;
+		nPixelsInside = 0;
+		nPixelsOutside = 0;
+		pi = 0;
+		count = 0;
 	}
 } g;
 
@@ -210,6 +218,7 @@ int check_keys(XEvent *e)
       x11.clear_screen();
 			break;
 		case XK_2:
+	//disk (circle)
 			g.mode = 2;
       //set x to random value
       g.center[0] = rnd() * g.xres;
@@ -219,6 +228,23 @@ int check_keys(XEvent *e)
       g.radius = rnd() * 100.0 + 20;
       x11.clear_screen();
 			break;
+
+		case XK_7:
+	//inscribe pi
+			g.mode = 7;
+			g.pi = 0;
+			g.count = 0;
+			g.nPixelsOutside = 0;
+			g.nPixelsInside = 0;
+      //set x to random value
+      g.center[0] = g.xres/2;
+      //set y to random value
+      g.center[1] = g.yres/2;
+      //set radius to random value
+      g.radius = 400;
+      x11.clear_screen();
+			break;
+
 		case XK_3:
       //ring
 			g.mode = 3;
@@ -230,7 +256,7 @@ int check_keys(XEvent *e)
       g.radius2 = g.radius - 10;
       x11.clear_screen();
 			break;
-    case XK_r:
+		case XK_r:
       //crecent
       g.mode = 11;
       g.center[0] = rnd() * g.xres;
@@ -265,6 +291,15 @@ int check_keys(XEvent *e)
 	g.mode = 5;
 	g.v0[0] = 100 * rnd();
 	g.v0[1] = 100 * rnd();
+
+	g.v1[0] = 100 * rnd();
+	g.v1[1] = 100 * rnd();
+	getPerpendicular(g.v0, g.v1);
+
+	g.v2[0] = g.v0[0];
+	g.v2[1] = g.v0[1];
+
+
 	
 
       	x11.clear_screen();
@@ -324,6 +359,21 @@ void showMenu()
 	return;
 }
 
+
+		//if (threeHalfSpaces(g.tri, x, y))
+
+/*
+//bool threeHalfSpaces(tri tri, int x, int y) 
+{
+	int dot = 0;
+
+	
+
+
+
+}
+*/
+
 void render()
 {
   //render() makes random pixle
@@ -350,6 +400,35 @@ void render()
     if (distance < g.radius) {
        x11.setColor3i(255,0,0);
     }
+
+		break;
+          }
+	case 7: {
+		//pi
+	if (g.count >= 1000) {
+		printf("pi: %lf \n", g.pi);
+		g.count = 0;
+	}
+    //differnce in x
+    Flt dx = x - g.center[0];
+    //diff in y
+    Flt dy = y - g.center[1];
+    //distance between circle 
+    Flt distance = sqrt(dx*dx + dy*dy);
+    if (distance < g.radius) {
+       x11.setColor3i(255,0,0);
+       g.nPixelsInside++;
+       g.nPixels++;
+       g.count++;
+    } else {
+    	g.nPixelsOutside++;
+	g.nPixels++;
+    	g.count++;
+    }
+
+    g.pi = 4.0 * (g.nPixelsInside / g.nPixels);
+
+    
 
 		break;
           }
@@ -407,20 +486,22 @@ void render()
     }
 		break;
           }
-	case 5:
+	case 5: {
 		//Fill triangle using 3 half-spaces
 		//if (threeHalfSpaces(g.tri, x, y))
 		//	setColor3i(255,120,40);
+		int dot = 0;
+		//g.v01
+
 		
 		break;
+		}
 	case 6:
 		//Fill triangle using Odd-even rule
 		//Determine if point at x,y is inside a triangle
 		//Does a horizontal line from x,y intersect any triangle sides?
 		break;
-	case 7:
-		//Calculate PI by inscribing circle in a square.
-		break;
+
 	case 8: {
     //Fill whole screen with checkerboard pattern
 
